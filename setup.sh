@@ -26,13 +26,13 @@ HEROKU_PROD_APP_NAME="prod$TICKS"
 HEROKU_PIPELINE_NAME="pipeline$TICKS"
 
 # Usernames or aliases of the orgs you're using
-DEV_HUB_USERNAME="HubOrg"
+DEV_HUB_USERNAME="ScratchOrg"
 DEV_USERNAME="DevOrg"
-STAGING_USERNAME="TestOrg"
-PROD_USERNAME="ProdOrg"
+STAGING_USERNAME="DevOrg"
+PROD_USERNAME="DevOrg"
 
 # Repository with your code
-GITHUB_REPO="wadewegner/salesforce-dx-pipeline-sample"
+GITHUB_REPO="robertinogierotto/DevOrg-Pipeline-Test"
 
 ### Setup script
 
@@ -58,17 +58,17 @@ heroku config:set SFDX_BUILDPACK_DEBUG=false -a $HEROKU_STAGING_APP_NAME
 heroku config:set SFDX_BUILDPACK_DEBUG=false -a $HEROKU_PROD_APP_NAME
 
 # Setup sfdxUrl's for auth
-devHubSfdxAuthUrl=$(sfdx force:org:display --verbose -u $DEV_HUB_USERNAME --json | jq -r .result.sfdxAuthUrl)
-heroku config:set DEV_HUB_SFDX_AUTH_URL=$devHubSfdxAuthUrl -a $HEROKU_DEV_APP_NAME
+# devHubSfdxAuthUrl=$(sfdx force:org:display --verbose -u $DEV_HUB_USERNAME --json | jq -r .result.sfdxAuthUrl)
+heroku config:set DEV_HUB_SFDX_AUTH_URL="force://PlatformCLI::5Aep861x3tqmOunfvcXxm6YaPYR0FWqHnDYGzq.34TDYOVkbwIXdU9aYa.wiersAaA4.YKILBTwm5IUxNM0wfC.@ruby-speed-3516-dev-ed.scratch.my.salesforce.com" -a $HEROKU_DEV_APP_NAME
 
-devSfdxAuthUrl=$(sfdx force:org:display --verbose -u $DEV_USERNAME --json | jq -r .result.sfdxAuthUrl)
-heroku config:set SFDX_AUTH_URL=$devSfdxAuthUrl -a $HEROKU_DEV_APP_NAME
+# devSfdxAuthUrl=$(sfdx force:org:display --verbose -u $DEV_USERNAME --json | jq -r .result.sfdxAuthUrl)
+heroku config:set SFDX_AUTH_URL="force://PlatformCLI::5Aep861Bky2w54txC02sK2e9V9OipaNTMfNvyzr3jsqkmXuHn5cQz5jAqFvQpg5aN7AKAE398yUcjPKXeRmD2cz@globant-9a-dev-ed.my.salesforce.com" -a $HEROKU_DEV_APP_NAME
 
-stagingSfdxAuthUrl=$(sfdx force:org:display --verbose -u $STAGING_USERNAME --json | jq -r .result.sfdxAuthUrl)
-heroku config:set SFDX_AUTH_URL=$stagingSfdxAuthUrl -a $HEROKU_STAGING_APP_NAME
+# stagingSfdxAuthUrl=$(sfdx force:org:display --verbose -u $STAGING_USERNAME --json | jq -r .result.sfdxAuthUrl)
+heroku config:set SFDX_AUTH_URL="force://PlatformCLI::5Aep861Bky2w54txC02sK2e9V9OipaNTMfNvyzr3jsqkmXuHn5cQz5jAqFvQpg5aN7AKAE398yUcjPKXeRmD2cz@globant-9a-dev-ed.my.salesforce.com" -a $HEROKU_STAGING_APP_NAME
 
-stagingSfdxAuthUrl=$(sfdx force:org:display --verbose -u $PROD_USERNAME --json | jq -r .result.sfdxAuthUrl)
-heroku config:set SFDX_AUTH_URL=$stagingSfdxAuthUrl -a $HEROKU_PROD_APP_NAME
+# stagingSfdxAuthUrl=$(sfdx force:org:display --verbose -u $PROD_USERNAME --json | jq -r .result.sfdxAuthUrl)
+heroku config:set SFDX_AUTH_URL="force://PlatformCLI::5Aep861Bky2w54txC02sK2e9V9OipaNTMfNvyzr3jsqkmXuHn5cQz5jAqFvQpg5aN7AKAE398yUcjPKXeRmD2cz@globant-9a-dev-ed.my.salesforce.com" -a $HEROKU_PROD_APP_NAME
 
 # Add buildpacks to apps
 heroku buildpacks:add -i 1 https://github.com/wadewegner/salesforce-cli-buildpack#v3 -a $HEROKU_DEV_APP_NAME
@@ -87,8 +87,8 @@ heroku pipelines:add $HEROKU_PIPELINE_NAME -a $HEROKU_PROD_APP_NAME -s productio
 # bug: https://github.com/heroku/heroku-pipelines/issues/80
 # heroku pipelines:setup $HEROKU_PIPELINE_NAME $GITHUB_REPO -y $HEROKU_TEAM_FLAG
 
-heroku ci:config:set -p $HEROKU_PIPELINE_NAME DEV_HUB_SFDX_AUTH_URL=$devHubSfdxAuthUrl
-heroku ci:config:set -p $HEROKU_PIPELINE_NAME SFDX_AUTH_URL=$devSfdxAuthUrl
+heroku ci:config:set -p $HEROKU_PIPELINE_NAME DEV_HUB_SFDX_AUTH_URL="force://PlatformCLI::5Aep861x3tqmOunfvcXxm6YaPYR0FWqHnDYGzq.34TDYOVkbwIXdU9aYa.wiersAaA4.YKILBTwm5IUxNM0wfC.@ruby-speed-3516-dev-ed.scratch.my.salesforce.com"
+heroku ci:config:set -p $HEROKU_PIPELINE_NAME SFDX_AUTH_URL="force://PlatformCLI::5Aep861Bky2w54txC02sK2e9V9OipaNTMfNvyzr3jsqkmXuHn5cQz5jAqFvQpg5aN7AKAE398yUcjPKXeRmD2cz@globant-9a-dev-ed.my.salesforce.com"
 heroku ci:config:set -p $HEROKU_PIPELINE_NAME SFDX_BUILDPACK_DEBUG=false
 
 # Clean up script
